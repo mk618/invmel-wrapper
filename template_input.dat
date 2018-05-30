@@ -1,0 +1,60 @@
+title
+ ... 
+rdata 
+  &rawd nw1=13,x1=0.18,
+   weigh1='La','Ce','Pr','Nd','Sm','Eu','Tb','Gd','Dy','Ho','Er', 
+            'Yb','Lu', 
+   weigh0='Sr','Ti','Na','P ','Rb','K ','Ba','Th','Al','Ca', 
+          'Fe','Si','Mg','U ','Pb','Y ','Zr','Nb','Cs','Ta', 
+          'Mn','Cr','Ni','Hf','V ','Ga','Sc','Co','Tm', 
+   required='La','Ce','Pr','Nd','Sm','Eu','Tb','Gd','Dy','Ho','Er', 
+            'Yb','Lu',ireq=13, 
+    nw0=29,norm=6,ixrat=1,nomaj=0,phi0=0.00,iwrit=0,fminmgo=6.,
+    ifudge=2,itaka=1,icomma=1,cfile='AllREE_SRP.csv', &end 
+
+parreset 
+ &mreset iwrit=0, &end
+minaverage
+ &minav minfile='allsp.min', &end
+% &minav minfile='allgar.min', &end
+
+%
+% Ken's model but with no amphibole, dtop changed from 90 to 150 km for Na
+%
+mixture
+ &mix epsil=EPSIL, norm1=4, norm2=6, epmorb=10, &end 
+
+mmodel
+ &meld  
+  xr= XR
+  0.0,
+ nv=NV,dtop=DTOP.,zbstep=5.,idcomp=1,iprn=0,nobnd=1,spout=72.,garin=63., &end
+
+minimize
+ &miniz wtlog=1.,icorr=0,wtd2=200., &end
+sort
+minimize
+ &miniz wtlog=0.1,icorr=0,wtd2=100., &end
+inverse
+bulk
+xfig
+splot
+dplot
+ &plt iptype=2,noerr=1,nfrac=0, &end
+dplot
+ &plt iptype=5,noerr=1,nfrac=0, &end
+dplot
+ &plt iptype=6,noerr=1,nfrac=0, &end
+extraction
+ &extrac name='Sm','Nd','Th','U ','Lu','Hf', nn=6, &end
+compare
+stop
+
+mmodel
+ &meld  xr=4.769e-3,4.274e-3,4.098e-3,3.978e-3,3.699e-3,3.479e-3,3.399e-3,
+ 3.141e-3,
+ nv=8,dtop=150.,famp=0.,garin=63.,spout=72.,amtop=100., ambot=120.,
+ nobnd=1,iprn=0, &end
+enrich
+ &add fmelt=FMELT,nmmel=6,nmmat=6, x1=0.18,
+  &end
